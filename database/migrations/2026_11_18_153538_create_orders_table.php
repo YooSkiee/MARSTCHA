@@ -9,14 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
-
+public function up(): void
+{
+    Schema::create('orders', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+        $table->string('invoice_number')->unique();
+        $table->unsignedBigInteger('total_price');
+        $table->text('shipping_address');
+        $table->string('payment_method');
+        $table->string('payment_proof')->nullable();
+        $table->enum('status', ['pending', 'paid', 'shipped', 'completed', 'cancelled'])->default('pending');
+        $table->timestamps();
+    });
+}
     /**
      * Reverse the migrations.
      */
